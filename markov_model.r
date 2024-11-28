@@ -1,29 +1,4 @@
-#╔════════════════════════════════════════════════╗
-#║     MATH111762 - Group 14 - Assignment 1       ║
-#╠════════════════════╦════════════╦══════════════╣
-#║        Name        ║ Student ID ║ Contribution ║
-#╠════════════════════╬════════════╬══════════════╣
-#║ Alexander Cheetham ║ s2638244   ║ 1/3          ║
-#║ Thalia Andreou     ║ s2665822   ║ 1/3          ║
-#║ Anni Tziakouri     ║ s2704516   ║ 1/3          ║
-#╚════════════════════╩════════════╩══════════════╝ 
-
-# Team member Contributions:
-# q3: Anni Tziakouri 
-# q4: Thalia Andreou 
-# q5: Alexander Cheetham 
-# q6: Anni Tziakouri 
-# q7: Thalia Andreou 
-# q8: Alexander Cheetham
-# q9: Thalia Andreou 
-# q10: Alexander Cheetham
-# General Commenting: Everyone
-# Test Cases: Alexander Cheetham
-# Final checks : Anni Tziakouri
-
-
 # This R script implements a pth-order Markov model to generate random text 
-# based on word patterns from James Joyce’s Ulysses. 
 # The pth-order Markov mode works by counting the 
 # number of occurrences for a given set of "token"s in a row in that text,
 # and using these frequencies as probabilities to predict the token after.
@@ -33,19 +8,17 @@
 # names John, James and Jacob with probability 1/3 each.
 
 
-
 # set seed for reproducibility
 # set.seed(12345); 
 
 
-# Question 3: Load in the Ulysses text file.
-# read the file into R between specified lines
-a <- scan("4300-0.txt",what="character",skip=73,nlines=32858-73,
+# Load in text file.
+a <- scan("input.txt",what="character",
           fileEncoding="UTF-8")
 # replaces all occurrences of the substring "_(" with an empty string
 a <- gsub("_(","",a,fixed=TRUE) 
 
-# Question 4: Preprocessing, separate punctuation into its own element on new vector
+# Preprocessing, separate punctuation into its own element on new vector
 # e.g "a,b.c?" --> "a", ",", "b", ".", "c", "?"
 
 split_punct<-function(vec,punct){
@@ -96,7 +69,7 @@ split_punct<-function(vec,punct){
   
 }
 
-# Question 5: remove punctuation
+# remove punctuation
 
 # use punctuation as defined in rubric
 punctuations <- c(",",".", ";", "!", ":", "?")
@@ -110,7 +83,7 @@ for (punct in punctuations){
   a_removed_punct<-split_punct(vec=a_removed_punct,punct=punct)}
   
 
-# Q6: create a vector of the m most common unique words
+# create a vector of the m most common unique words
 
 # convert to lowercase, 
 # collect all the unique words in from vector
@@ -133,7 +106,7 @@ largest_indices <- which(frequencies >= threshold_value)
 b<-unique_words[largest_indices]
 
 
-# Q6 - extra graph to visualize difference with adjusting the 
+# extra graph to visualize difference with adjusting the 
 # m most common words
 
 # Initialize values of m and corresponding threshold values
@@ -159,7 +132,7 @@ plot(m_values, threshold_values, type = "l", col = "blue",
 # including more words does not significantly affect the minimum frequency required.
 
 
-#Question 7 : create matrix M
+# create matrix M
 # M is of size (n − p )x(p+1) and contains chronological contiguous p+1 word 
 # snippets of the tokenized version of Ulysses as its rows.
 
@@ -188,7 +161,7 @@ create_common_token_sequences<-function(mlag,word_vec){
   return(M)
 }
 
-#set mlag as 4
+#set mlag as 4 for now
 mlag<-4
 
 # instantiate index vector, where indexes of b are matched with lowercase_a
@@ -199,7 +172,7 @@ M<-create_common_token_sequences(mlag,index_vector)
 #print(M)
 
 
-#Question 8: simulate nw-word sections from your model
+#simulate nw-word sections from your model
 
 inference_model<-function(nw,index_vector,M,prob=NULL){
   # Function: inference_model
@@ -285,8 +258,8 @@ inference_model<-function(nw,index_vector,M,prob=NULL){
       
       # check that options are not of one type
       # including edge case of token,NA which also counts as one type
-      if (length(unique(row_matches[,j+1]))==1|
-          (length(unique(row_matches[,j+1]))==2&
+      if (length((row_matches[,j+1]))==1|
+          (length((row_matches[,j+1]))==2&
            sum(is.na(row_matches[,j+1]))>=1)) {
         
         # all ngram match options are one token or {token,NA} which is 
@@ -303,12 +276,12 @@ inference_model<-function(nw,index_vector,M,prob=NULL){
       
       # select the next valid  token sampling from the j+1-th column of matches
       sampling_vector <- row_matches[,j+1]
-      sampling_vector <- unique(sampling_vector[!is.na(sampling_vector)])
+      sampling_vector <- sampling_vector[!is.na(sampling_vector)]
       # check if prob argument provided
       if(!is.null(prob)){
         # create a subset of weights for sample based on unique tokens
         # in sampling vector.
-        subset_prob<-prob[unique(sampling_vector)]
+        subset_prob<-prob[sampling_vector]
         next_token <- sample(sampling_vector, size=1,
                              prob=subset_prob,replace = TRUE)
       } 
@@ -329,7 +302,7 @@ inference_model<-function(nw,index_vector,M,prob=NULL){
   }
   return(final_sequence)
 }
-# q8 actually generate some simulated text.
+# now ctually generate some simulated text.
 
 # inference the markov model 
 simulated_text <- inference_model(50,index_vector,M=M,prob=NULL)
@@ -338,73 +311,12 @@ print("------------START N-gram Simulated sentence----------------")
 cat(b[simulated_text], sep=" ")
 print("------------END N-gram Simulated sentence----------------")
 
-# q9: compare to 50 randomly sampled words
+# compare to 50 randomly sampled words
 corresponding_freqs <- frequencies[largest_indices]
 random_samples <- sample(b, size = 50, replace = TRUE,prob=corresponding_freqs)
 print("------------START Randomly Sampled Simulated sentence----------------")
 cat(random_samples, " ")
 print("------------END Randomly Sampled Simulated sentence----------------")
 
-
-#q10: format the simulated text so commonly capitalised words are capitalised
-#       and punctuation is printed in expected positions.
-
-# capitalise all first letters in b
-capitalise_first_letter <- function(string) {
-  paste0(toupper(substring(string, 1, 1)), tolower(substring(string, 2)))
-}
-b_capitalized<-sapply(b, capitalise_first_letter)
-
-# find the matches for capitalised versions of the words in B
-b_cap_match <- match(a_removed_punct,b_capitalized)
-b_cap_match <- b_cap_match[!is.na(b_cap_match)]
-b_cap_freq <- tabulate(b_cap_match,nbins=length(b_capitalized))
-
-# calculate the ratio of capitalised to non-capitalised versions of a given word
-# using the corresponding freqs (totals)
-freq_cap_ratio <- b_cap_freq / corresponding_freqs 
-
-# get the indexes of the words that are more likely (prob 0.5+)
-# or even chances to be capitalised
-indexes_capitals <- which(freq_cap_ratio >= 0.5)
-b_modified <- b
-# capitalise all words likely to be capitalised in common word list
-b_modified[indexes_capitals] <- tools::toTitleCase(b)[indexes_capitals]
-
-write_sentence <- function(words) {
-  # Function: write_sentence
-  # Description: This function takes a vector of words and punctuation and 
-  #             prints a sentence with correct punctuation placement.
-  #              
-  # Inputs:
-  #   - words: vector of words and punctuation
-  # Outputs:
-  #   - print to console sentence with correct punctuation
-  sentence <- ""
-  for (i in 1:length(words)) {
-    if (words[i] %in% punctuations) {
-      # If the element is a punctuation mark, add it directly without space
-      sentence <- paste0(sentence, words[i], " ")
-    } else {
-      # Add a space before the word if it's not the first word
-      if (i > 1 && !words[i-1] %in% punctuations) {
-        sentence <- paste0(sentence, " ")
-      }
-      # Add the word
-      sentence <- paste0(sentence, words[i])
-    }
-  }
-  
-  # Use cat() to print the sentence without quotes
-  cat(sentence)
-}
-
-print("------------START Capitalised N-gram Simulated sentence----------------")
-write_sentence(b_modified[simulated_text])
-print("------------END Capitalised N-gram Simulated sentence----------------")
-
-print("------------START Capitalised Random Sampled Simulated sentence----------------")
-cat(write_sentence(random_samples), " ")
-print("------------END Capitalised Randomly Sampled Simulated sentence----------------")
 
 
