@@ -1,24 +1,3 @@
-#╔════════════════════════════════════════════════╗
-#║     MATH111762 - Group 14 - Assignment 2       ║
-#╠════════════════════╦════════════╦══════════════╣
-#║        Name        ║ Student ID ║ Contribution ║
-#╠════════════════════╬════════════╬══════════════╣
-#║ Alexander Cheetham ║ s2638244   ║ 1/3          ║
-#║ Thalia Andreou     ║ s2665822   ║ 1/3          ║
-#║ Anni Tziakouri     ║ s2704516   ║ 1/3          ║
-#╚════════════════════╩════════════╩══════════════╝ 
-
-# Team member Contributions:
-# Data loading: Thalia Andreou   
-# Pearson Function: Thalia Andreou 
-# Edge case handling: Thalia Andreou 
-# Basic Deconv Algorithm: Alexander Cheetham
-# Partial Pearson Sum: Alexander Cheetham
-# Bootstrapping: Anni Tziakouri
-# Plots/visualisation: Alexander Cheetham / Anni Tziakouri
-
-
-
 # This R script implements a basic greedy model for inferring
 # fatal incidence rates from Covid deaths in English hospitals using a 
 # modified Pearson statistic as the loss function. Where the loss is between
@@ -307,8 +286,6 @@ legend("topright",
        pch = c(NA),
        col=c("red"))
 
-
-# THE BELOW ANALYSIS IS EXTRA AND DOES NOT NEED TO BE RUN:
 
 
 # Experiment with changing shift values in generate_sequence function
